@@ -172,27 +172,47 @@ const SubmitButton = styled.button`
   }
 `;
 
+async function retrieveData(blobSizes) {
+  blobSizes = parseInt(blobSizes);
+  var json = JSON.stringify({
+    blobSizes: [blobSizes],
+  });
+
+  try {
+    const response = await fetch("/estimateFee", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: json,
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+// The App component
 const App = () => {
   const [state, setState] = useState({
     tab: "DA Calculator", // Mint / Indexer / Transfer
     dataToSend: "346", // Added for the new input field
     result: null,
   });
-  return (
-    <Main>
-      <HeaderContainer>
-        <TabContainer>
-          <TabItem
-            selected={state.tab === "DA Calculator"}
-            onClick={() => {
-              console.log("printed!");
-            }}
-          >
-            DA Calculator
-          </TabItem>
-        </TabContainer>
-        <Spacer />
-      </HeaderContainer>
+
+  let data = null;
+
+  let body = null;
+  if (state.result !== null) {
+    body = (
+      <div>
+        {" "}
+        <h2>Result:</h2>
+        <p>{JSON.stringify(state.result)}</p>
+      </div>
+    );
+  } else {
+    body = (
       <BodyContainer>
         {state.tab === "DA Calculator" && (
           <>
@@ -212,23 +232,38 @@ const App = () => {
                   <UnitContent>Bytes</UnitContent>
                 </FormInputRow>
                 <SubmitButton
-                  onClick={() =>
-                    console.log("Data submitted:", state.dataToSend)
-                  }
+                  onClick={async () => {
+                    data = await retrieveData(state.dataToSend);
+                    // Set the data to be part of the state
+                    setState({ ...state, result: data });
+                  }}
                 >
                   Submit
                 </SubmitButton>
               </FormInputContainer>
-              {state.result && (
-                <div>
-                  <h2>Result:</h2>
-                  <p>{JSON.stringify(state.result)}</p>
-                </div>
-              )}
             </FormContainer>
           </>
         )}
       </BodyContainer>
+    );
+  }
+
+  return (
+    <Main>
+      <HeaderContainer>
+        <TabContainer>
+          <TabItem
+            selected={state.tab === "DA Calculator"}
+            onClick={() => {
+              console.log("printed!");
+            }}
+          >
+            DA Calculator
+          </TabItem>
+        </TabContainer>
+        <Spacer />
+      </HeaderContainer>
+      {body}
     </Main>
   );
 };
