@@ -1,7 +1,7 @@
 {
   "headers": [
     {
-      "source": "https://da-calculator-697b837afec5.herokuapp.com/estimate:path*",
+      "source": "https://da-calculator-697b837afec5.herokuapp.com/(.*)",
       "headers": [
         { "key": "Access-Control-Allow-Credentials", "value": "true" },
         { "key": "Access-Control-Allow-Origin", "value": "*" },
