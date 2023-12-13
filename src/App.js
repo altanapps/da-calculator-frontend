@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
+// The root
+const rootUrl =
+  process.env.NODE_ENV === "production"
+    ? "https://da-calculator-697b837afec5.herokuapp.com"
+    : "";
+
 // Styled Components
 const FormInputContainer = styled.div`
   display: flex;
@@ -169,7 +175,7 @@ async function retrieveData(blobSizes) {
   });
 
   try {
-    const response = await fetch("/estimateFee", {
+    const response = await fetch(`${rootUrl}/estimateFee`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
