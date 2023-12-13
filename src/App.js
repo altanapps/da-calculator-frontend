@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import styled from "styled-components";
 
 // Styled Components
@@ -59,28 +59,6 @@ const TableCell = styled.div`
   flex: 1;
   padding: 10px;
 `;
-
-const Table = () => {
-  return (
-    <TableDiv>
-      <TableHeader>
-        <TableCell>Column 1</TableCell>
-        <TableCell>Column 2</TableCell>
-        <TableCell>Column 3</TableCell>
-      </TableHeader>
-      <TableRow>
-        <TableCell>Data 1</TableCell>
-        <TableCell>Data 2</TableCell>
-        <TableCell>Data 3</TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell>Data 4</TableCell>
-        <TableCell>Data 5</TableCell>
-        <TableCell>Data 6</TableCell>
-      </TableRow>
-    </TableDiv>
-  );
-};
 
 const FormInputTitle = styled.div`
   font-size: 24px;
@@ -204,12 +182,62 @@ const App = () => {
 
   let body = null;
   if (state.result !== null) {
+    const result=state.result;
+    const Table = () => {
+      return (
+        <TableDiv>
+          <TableRow>
+            <TableCell>NEAR</TableCell>
+            <TableCell>TIA</TableCell>
+            <TableCell>ETH</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>{JSON.stringify(result.NEAR)} $</TableCell>
+            <TableCell>{JSON.stringify(result.TIA)} $</TableCell>
+            <TableCell>{JSON.stringify(result.ETH)} $</TableCell>
+          </TableRow>
+        </TableDiv>
+      );
+    };
     body = (
-      <div>
-        {" "}
-        <h2>Result:</h2>
-        <p>{JSON.stringify(state.result)}</p>
-      </div>
+      <>
+      <BodyContainer>
+        {state.tab === "DA Calculator" && (
+          <>
+            <FormContainer>
+              <FormInputContainer>
+                <FormInputLabel>
+                  <FormInputTitle>Data to Send (Bytes)</FormInputTitle>
+                </FormInputLabel>
+                <FormInputRow>
+                  <Input
+                    value={state.dataToSend}
+                    onChange={(e) =>
+                      setState({ ...state, dataToSend: e.target.value })
+                    }
+                    spellCheck="false"
+                  />
+                  <UnitContent>Bytes</UnitContent>
+                </FormInputRow>
+                <SubmitButton
+                  onClick={async () => {
+                    data = await retrieveData(state.dataToSend);
+                    // Set the data to be part of the state
+                    setState({ ...state, result: data });
+                  }}
+                >
+                  Submit
+                </SubmitButton>
+               
+              </FormInputContainer>
+            </FormContainer>
+          </>
+        )}
+      </BodyContainer>
+        <BodyContainer>
+          <Table></Table>
+        </BodyContainer>
+      </>
     );
   } else {
     body = (
@@ -240,6 +268,7 @@ const App = () => {
                 >
                   Submit
                 </SubmitButton>
+               
               </FormInputContainer>
             </FormContainer>
           </>
