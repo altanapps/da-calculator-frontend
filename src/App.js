@@ -169,13 +169,16 @@ async function retrieveData(blobSizes) {
   });
 
   try {
-    const response = await fetch("/estimateFee", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: json,
-    });
+    const response = await fetch(
+      "https://da-calculator-697b837afec5.herokuapp.com/estimateFee",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: json,
+      }
+    );
     const data = await response.json();
     return data;
   } catch (error) {
